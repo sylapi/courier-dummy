@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sylapi\Courier\Dummy;
 
-use PHPUnit\Event\Code\Test;
 use Sylapi\Courier\Contracts\Shipment;
 use Sylapi\Courier\Dummy\Enums\TestId;
 use Sylapi\Courier\Dummy\Entities\Options;
