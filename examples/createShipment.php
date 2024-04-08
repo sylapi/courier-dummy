@@ -1,12 +1,14 @@
 <?php
+require '../vendor/autoload.php';
 
 use Sylapi\Courier\CourierFactory;
+use Sylapi\Courier\Dummy\Enums\TestId;
+use Sylapi\Courier\Dummy\Entities\Options;
 
-$courier = CourierFactory::create('Gls', [
-    'login'     => 'mylogin',
-    'password'  => 'mypassword',
+$courier = CourierFactory::create('Dummy', [
+    'login'     => 'login',
+    'password'  => 'password',
     'sandbox'   => true,
-    'labelType' => 'one_label_on_a4_rt_pdf',
 ]);
 
 /**
@@ -22,21 +24,21 @@ $sender->setFullName('Nazwa Firmy/Nadawca')
     ->setCountry('Poland')
     ->setCountryCode('cz')
     ->setContactPerson('Jan Kowalski')
-    ->setEmail('login@email.com')
+    ->setEmail('sender@email.test')
     ->setPhone('48500600700');
 
 $receiver = $courier->makeReceiver();
 $receiver->setFirstName('Jan')
     ->setSurname('Nowak')
-    ->setStreet('Vysoká')
+    ->setStreet('Ulica Zielona')
     ->setHouseNumber('15')
     ->setApartmentNumber('1896')
-    ->setCity('Ostrava')
-    ->setZipCode('70200')
-    ->setCountry('Czechy')
-    ->setCountryCode('cz')
+    ->setCity('Świebodzin')
+    ->setZipCode('66-200')
+    ->setCountry('Poland')
+    ->setCountryCode('pl')
     ->setContactPerson('Jan Kowalski')
-    ->setEmail('login@email.com')
+    ->setEmail('receiver@email.test')
     ->setPhone('48500600700');
 
 $parcel = $courier->makeParcel();
@@ -46,15 +48,15 @@ $shipment = $courier->makeShipment();
 $shipment->setSender($sender)
     ->setReceiver($receiver)
     ->setParcel($parcel)
-    ->setContent('Zawartość przesyłki');
+    ->setContent('Zawartość przesyłki')
+    ->setOptions(new Options)
+    ->setCustomOption(TestId::SUCCESS->value); // or TestId::ERROR->value
+
+
 
 try {
     $response = $courier->createShipment($shipment);
-    if ($response->hasErrors()) {
-        var_dump($response->getFirstError()->getMessage());
-    } else {
-        var_dump($response->shipmentId); // Zewnetrzny idetyfikator zamowienia
-    }
+    var_dump($response->getShipmentId());
 } catch (\Exception $e) {
     var_dump($e->getMessage());
 }
