@@ -21,24 +21,26 @@ class CourierGetStatuses implements CourierGetStatusesContract
 
     public function getStatus(string $shipmentId): ResponseStatus
     {
+
+
         try {
             $payload = [
                 'shipmentId' => $shipmentId,
                 'token' => $this->session->token(),
             ];
 
-            switch($shipmentId) {
-                case TestId::SUCCESS->value:
-                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'status' => 'DELIVERED'];
-                    break;
-                case TestId::ERROR->value:
-                    throw new TransportException('Error');
-                default:
-                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'status' => 'DELIVERED'];
-                    break;
-            }            
+            $result = [
+                'response' => 'SUCCESS',
+                'shipmentId' => $shipmentId,
+                'status' => 'ORIGINAL_DELIVERED',
+            ];
 
-            $statusResponse = new StatusResponse((string) new StatusTransformer($result['status']));
+            if($shipmentId == TestId::ERROR->value) {
+                throw new TransportException('Error');
+            }
+      
+
+            $statusResponse = new StatusResponse((string) new StatusTransformer($result['status']), $result['status']);
             $statusResponse->setResponse($result);
             $statusResponse->setRequest($payload);
             return $statusResponse;
