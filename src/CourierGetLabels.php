@@ -29,14 +29,16 @@ class CourierGetLabels implements CourierGetLabelsContract
                 'shipmentId' => $shipmentId,
             ];
     
+            $labelCode = base64_decode(base64_encode('<html><body><h1>Label</h1><h2>Created: '.date('Y-m-d H:i:s').'</h2></body></html>'));
+
             switch($shipmentId) {
                 case TestId::SUCCESS->value:
-                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => 'LABEL'];
+                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => $labelCode];
                     break;
                 case TestId::ERROR->value:
                     throw new TransportException('Error');
                 default:
-                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => 'LABEL'];
+                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => $labelCode];
                     break;
             }
             
