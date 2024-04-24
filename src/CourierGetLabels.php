@@ -36,10 +36,8 @@ class CourierGetLabels implements CourierGetLabelsContract
                     $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => $labelCode];
                     break;
                 case TestId::ERROR->value:
-                    throw new TransportException('Error');
                 default:
-                    $result = ['response' => 'SUCCESS', 'shipmentId' => $shipmentId, 'label' => $labelCode];
-                    break;
+                    throw new TransportException('Error');
             }
             
             $labelResponse = new LabelResponse((string) $result['label']);
